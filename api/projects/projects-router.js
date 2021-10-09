@@ -6,7 +6,7 @@ const Project = require("./projects-model");
 
 const router = express.Router();
 
-const { validateId } = require("./projects-middleware");
+const { validateId, validateProject } = require("./projects-middleware");
 
 router.get("/", (req, res) => {
   Project.get()
@@ -34,19 +34,14 @@ router.post("/", (req, res) => {
     });
 });
 
-router.put("/:id", (req, res) => {
-  const changes = req.body;
-  Project.update(req.params.id, changes)
+router.put("/:id", validateId, validateProject, (req, res) => {
+  Project.update(req.params.id, req.body)
     .then((pj) => {
-      if (!changes) {
-        res.status(404).json({ message: "ID could not found" });
-      } else {
-        res.status(200).json(pj);
-      }
+      res.status(200).json(pj);
     })
     .catch((err) => {
       console.log(err);
-      res.status(400).json({ message: "missing!" });
+      res.status(400);
     });
 });
 
@@ -59,6 +54,16 @@ router.delete("/:id", validateId, async (req, res) => {
   }
 });
 
-router.get("/:id/actions", (req, res) => {});
+router.get("/:id/actions", validateId, (req, res) => {
+  const { id } = req.params;
+  Project.getProjectActions(id)
+    .then((project) => {
+      res.status(200).json(project);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500);
+    });
+});
 
 module.exports = router;

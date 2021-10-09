@@ -13,4 +13,19 @@ const validateId = async (req, res, next) => {
   }
 };
 
-module.exports = { validateId };
+const validateProject = (req, res, next) => {
+  const body = req.body;
+  if (!body.name || !body.description || !body.completed) {
+    res
+      .status(400)
+      .json({ message: "missing required name, description or completed" });
+  } else {
+    next();
+  }
+};
+
+// const validateUser = async (req, res, next) => {
+
+// }
+
+module.exports = { validateId, validateProject };

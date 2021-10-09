@@ -7,7 +7,7 @@ const router = express.Router();
 
 const { validateActionsId } = require("./actions-middlware");
 
-router.get("/", (req, rest) => {
+router.get("/", (req, res) => {
   Actions.get()
     .then((action) => {
       res.status(200).json(action);
@@ -52,7 +52,7 @@ router.put("/:id", (req, res) => {
 router.delete("/:id", validateActionsId, async (req, res) => {
   try {
     const deletedAction = await Actions.remove(req.params.id);
-    res.status(200).json(req.actions);
+    res.status(200).json(req.action);
   } catch (err) {
     next(err);
   }
