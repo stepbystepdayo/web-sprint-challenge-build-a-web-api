@@ -15,10 +15,14 @@ const validateId = async (req, res, next) => {
 
 const validateProject = (req, res, next) => {
   const body = req.body;
-  if (!body.name || !body.description || !body.completed) {
+  if (
+    body.name == undefined ||
+    body.description == undefined ||
+    body.completed == undefined
+  ) {
     res
       .status(400)
-      .json({ message: "missing required name, description or completed" });
+      .send({ message: "Please put name, description and completed!" });
   } else {
     next();
   }
